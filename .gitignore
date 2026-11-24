@@ -1,0 +1,4 @@
+.DS_Store
+build_vocab.py
+__pycache__/
+*.pyc

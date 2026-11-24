@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="六级速刷">
+  <meta name="theme-color" content="#2563eb">
+  <title>六级高频词速刷</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.12);
+      --ok: #16a34a;
+      --ok-soft: rgba(22, 163, 74, 0.14);
+      --warn: #ea580c;
+      --warn-soft: rgba(234, 88, 12, 0.14);
+      --danger: #dc2626;
+      --danger-soft: rgba(220, 38, 38, 0.14);
+      --listen: #7c3aed;
+      --listen-soft: rgba(124, 58, 237, 0.13);
+      --shadow: 0 10px 28px -10px rgba(15, 23, 42, 0.12);
+      --radius: 18px;
+      --nav-h: 64px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0b1120;
+        --surface: #111827;
+        --surface-2: #1e293b;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+        --border: #1e293b;
+        --primary: #3b82f6;
+        --primary-soft: rgba(59, 130, 246, 0.18);
+        --ok: #22c55e;
+        --ok-soft: rgba(34, 197, 94, 0.18);
+        --warn: #fb923c;
+        --warn-soft: rgba(251, 146, 60, 0.18);
+        --danger: #f87171;
+        --danger-soft: rgba(248, 113, 113, 0.18);
+        --listen: #a78bfa;
+        --listen-soft: rgba(167, 139, 250, 0.18);
+        --shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --primary: #3b82f6;
+      --primary-soft: rgba(59, 130, 246, 0.18);
+      --ok: #22c55e;
+      --ok-soft: rgba(34, 197, 94, 0.18);
+      --warn: #fb923c;
+      --warn-soft: rgba(251, 146, 60, 0.18);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.18);
+      --listen: #a78bfa;
+      --listen-soft: rgba(167, 139, 250, 0.18);
+      --shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+      min-height: 100dvh;
+    }
+    button, input, textarea {
+      font: inherit;
+      color: inherit;
+      touch-action: manipulation;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .app {
+      max-width: 560px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 10px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .brand-badge {
+      background: linear-gradient(135deg, #2563eb, #4338ca);
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      letter-spacing: 0.4px;
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-weight: 700;
+      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      height: 36px;
+      min-width: 36px;
+      padding: 0 10px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .icon-btn:active { transform: scale(0.97); }
+
+    .main {
+      flex: 1;
+      padding: 12px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .panel { display: none; flex-direction: column; gap: 12px; flex: 1; }
+    .panel.active { display: flex; }
+
+    .h-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+
+    .day-pill {
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 58px;
+      gap: 1px;
+    }
+    .day-pill strong { font-size: 13px; }
+    .day-pill span { font-size: 11px; color: var(--muted); }
+    .day-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .day-pill.active span { color: rgba(255, 255, 255, 0.85); }
+    .day-pill.done:not(.active) {
+      border-color: var(--ok);
+      background: var(--ok-soft);
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chip.active {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .chip.toggle-on {
+      background: var(--listen-soft);
+      border-color: var(--listen);
+      color: var(--listen);
+    }
+
+    .progress-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .progress-track {
+      flex: 1;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--ok));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    .word-card {
+      min-height: 290px;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .badge.listen {
+      background: var(--listen-soft);
+      border-color: transparent;
+      color: var(--listen);
+    }
+    .badge.requeue {
+      background: var(--warn-soft);
+      border-color: transparent;
+      color: var(--warn);
+    }
+    .badge.cat {
+      background: var(--primary-soft);
+      border-color: transparent;
+      color: var(--primary);
+    }
+
+    .speak-btn {
+      height: 40px;
+      padding: 0 13px;
+      border-radius: 12px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 13.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .speak-btn:active { transform: scale(0.96); }
+
+    .word-hero {
+      text-align: center;
+      padding: 14px 6px;
+    }
+    .word-text {
+      font-size: clamp(28px, 7vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      word-break: break-word;
+      margin: 0;
+    }
+    .phonetic {
+      margin-top: 6px;
+      font-size: 14.5px;
+      color: var(--muted);
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+    }
+    .blind-box {
+      padding: 18px 12px;
+      border-radius: 14px;
+      background: var(--listen-soft);
+      color: var(--listen);
+      text-align: center;
+    }
+    .blind-dots {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 5px;
+    }
+    .blind-tip {
+      font-size: 13px;
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    .tap-hint {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+    }
+
+    .reveal-box {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cn-meaning {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sub-block {
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13.5px;
+    }
+    .sub-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .syno-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .syno-tag {
+      font-size: 12.5px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .phrase-item + .phrase-item { margin-top: 4px; }
+    .ex-cn { color: var(--muted); margin-top: 3px; font-size: 13px; }
+
+    .action-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .big-btn {
+      min-height: 54px;
+      border-radius: 15px;
+      font-size: 15.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px;
+      transition: transform 0.1s ease, opacity 0.15s ease;
+    }
+    .big-btn:active { transform: scale(0.98); }
+    .big-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+      border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+    }
+    .btn-ok {
+      background: var(--ok);
+      color: #fff;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-ghost {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .undo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .text-link {
+      color: var(--primary);
+      font-weight: 600;
+      padding: 4px 6px;
+    }
+
+    .empty-card {
+      text-align: center;
+      padding: 36px 20px;
+      align-items: center;
+    }
+    .empty-icon { font-size: 42px; }
+    .empty-title { font-size: 18px; font-weight: 800; margin: 4px 0 0; }
+    .empty-desc { font-size: 13.5px; color: var(--muted); margin: 0; }
+
+    /* Writing Spelling Tab */
+    .write-cn {
+      font-size: 22px;
+      font-weight: 800;
+      text-align: center;
+      margin: 8px 0 2px;
+    }
+    .write-hint {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .skeleton-box {
+      text-align: center;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+    .spell-input {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      background: var(--surface-2);
+      font-size: 18px;
+      font-weight: 600;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .spell-input:focus { border-color: var(--primary); }
+    .spell-feedback {
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .spell-feedback.ok { background: var(--ok-soft); color: var(--ok); }
+    .spell-feedback.err { background: var(--danger-soft); color: var(--text); border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); }
+    .diff-line {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 15.5px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .ch-ok { color: var(--ok); font-weight: 700; }
+    .ch-bad { color: var(--danger); background: var(--danger-soft); text-decoration: underline wavy; font-weight: 700; border-radius: 3px; padding: 0 1px; }
+    .ch-miss { color: var(--warn); background: var(--warn-soft); font-weight: 700; border-radius: 3px; padding: 0 2px; }
+
+    /* Vocab mini list */
+    details.vocab-list-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+    details.vocab-list-wrap summary {
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .mini-list {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .mini-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      font-size: 13px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bottom-nav-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      height: var(--nav-h);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      position: relative;
+    }
+    .nav-btn .nav-ico { font-size: 20px; line-height: 1; }
+    .nav-btn.active { color: var(--primary); }
+    .nav-count {
+      position: absolute;
+      top: 6px;
+      right: calc(50% - 28px);
+      background: var(--warn);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 999px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* Dialog */
+    dialog {
+      width: min(92vw, 480px);
+      max-height: 85dvh;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 0;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    dialog::backdrop {
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(3px);
+    }
+    .dlg-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .dlg-body {
+      padding: 16px 18px 20px;
+      overflow-y: auto;
+      max-height: calc(85dvh - 56px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .stat-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+    .stat-val { font-size: 20px; font-weight: 800; }
+    .stat-lbl { font-size: 12px; color: var(--muted); }
+    .json-area {
+      width: 100%;
+      min-height: 76px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 12px;
+      resize: vertical;
+    }
+    .tip-card {
+      background: var(--primary-soft);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 14px);
+      transform: translateX(-50%) translateY(16px);
+      background: #0f172a;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 50;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-badge">CET-6</span>
+        <span class="brand-title">高频词速刷</span>
+      </div>
+      <div class="top-actions">
+        <button id="accentBtn" class="icon-btn" type="button" title="切换英音/美音">🇺🇸 美音</button>
+        <button id="themeBtn" class="icon-btn" type="button" title="切换深浅主题">🌓</button>
+        <button id="statsBtn" class="icon-btn" type="button">📊 进度</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Tab 1: 速筛 -->
+      <section id="panel-screen" class="panel active" aria-label="高频词速筛">
+        <div id="dayBar" class="h-scroll" role="tablist" aria-label="Day 1 到 12"></div>
+
+        <div class="controls-row">
+          <div class="chips" id="screenFilters">
+            <button type="button" class="chip" data-filter="unscreened">未筛</button>
+            <button type="button" class="chip" data-filter="all">全部</button>
+            <button type="button" class="chip" data-filter="listen">🎧 听力高频</button>
+          </div>
+          <div class="chips">
+            <button type="button" class="chip" id="blindToggle">👂 盲听</button>
+            <button type="button" class="chip" id="autoPlayToggle">🔊 自动播</button>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-track"><div id="dayProgressFill" class="progress-fill" style="width:0%"></div></div>
+          <span id="dayProgressText">0/0</span>
+        </div>
+
+        <div id="screenStage"></div>
+
+        <div class="undo-row">
+          <button type="button" id="undoScreenBtn" class="text-link">↩️ 撤回上一张</button>
+          <span id="screenQueueInfo"></span>
+        </div>
+      </section>
+
+      <!-- Tab 2: 生词本 -->
+      <section id="panel-vocab" class="panel" aria-label="生词本清零">
+        <div class="controls-row">
+          <div class="chips" id="vocabFilters">
+            <button type="button" class="chip" data-vfilter="all">全部待清零</button>
+            <button type="button" class="chip" data-vfilter="today">今日新增</button>
+          </div>
+          <div class="chips">
+            <button type="button" class="chip" id="vocabBlindToggle">👂 盲听复刷</button>
+          </div>
+        </div>
+
+        <div id="vocabStage"></div>
+
+        <details class="vocab-list-wrap" id="vocabListDetails">
+          <summary>查看生词清单（点词可播音）</summary>
+          <div id="vocabMiniList" class="mini-list"></div>
+        </details>
+      </section>
+
+      <!-- Tab 3: 写译拼写 -->
+      <section id="panel-write" class="panel" aria-label="写译拼写专练">
+        <div id="writeCats" class="h-scroll"></div>
+        <div class="controls-row">
+          <span id="writeProgressText" style="font-size:12.5px;color:var(--muted);">已掌握 0/120</span>
+          <button type="button" class="chip" id="writeHintToggle">💡 首字母骨架</button>
+        </div>
+        <div id="writeStage"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="主导航">
+      <div class="bottom-nav-inner">
+        <button type="button" class="nav-btn active" data-tab="screen">
+          <span class="nav-ico">🎧</span>
+          <span>速筛</span>
+        </button>
+        <button type="button" class="nav-btn" data-tab="vocab">
+          <span class="nav-ico">🔥</span>
+          <span>生词本</span>
+          <span id="vocabBadge" class="nav-count" hidden>0</span>
+        </button>
+        <button type="button" class="nav-btn" data-tab="write">
+          <span class="nav-ico">✍️</span>
+          <span>写译拼写</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <dialog id="statsDialog" closedby="any" aria-labelledby="statsTitle">
+    <div class="dlg-head">
+      <span id="statsTitle">📊 学习统计与数据备份</span>
+      <button type="button" id="closeStatsBtn" class="icon-btn">✕</button>
+    </div>
+    <div class="dlg-body">
+      <div class="stat-grid" id="statGrid"></div>
+      <div class="tip-card">
+        <strong>📱 添加到 iPhone 主屏幕（像 App 一样离线用）：</strong><br>
+        1. 用 Safari 打开本页，点底部「分享 ⬆️」按钮；<br>
+        2. 下滑选「添加到主屏幕」，点右上角「添加」即可。
+      </div>
+      <div>
+        <div class="sub-label">进度备份 / 跨设备同步（防清理缓存丢失）</div>
+        <textarea id="backupJson" class="json-area" placeholder="点击下方导出进度，或把备份 JSON 粘贴到这里点导入..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button type="button" id="exportBtn" class="icon-btn">📋 复制导出 JSON</button>
+          <button type="button" id="importBtn" class="icon-btn">📥 导入覆盖</button>
+          <button type="button" id="resetBtn" class="icon-btn" style="color:var(--danger);margin-left:auto;">🗑 清空进度</button>
+        </div>
+      </div>
+      <div id="metaInfo" style="font-size:12px;color:var(--muted);"></div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./data.js"></script>
+  <script>
+    (function () {
+      const STORAGE_KEY = 'cet6_vocab_state_v1';
+      const DATA = window.CET6_DATA || { meta: {}, words: [], writingWords: [] };
+      const WORDS = DATA.words || [];
+      const WRITING = DATA.writingWords || [];
+      const WORD_BY_ID = new Map(WORDS.map((w) => [w.id, w]));
+
+      function todayStr() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function defaultState() {
+        return {
+          known: {},
+          unknown: {},
+          writingMastered: {},
+          writingWeak: {},
+          dailyCount: {},
+          settings: {
+            tab: 'screen',
+            day: 1,
+            filter: 'unscreened',
+            blind: false,
+            autoPlay: true,
+            accent: 'us',
+            theme: 'auto',
+            vocabFilter: 'all',
+            vocabBlind: false,
+            writeCat: 'all',
+            writeHint: false
+          }
+        };
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return defaultState();
+          const parsed = JSON.parse(raw);
+          const def = defaultState();
+          return {
+            known: parsed.known || {},
+            unknown: parsed.unknown || {},
+            writingMastered: parsed.writingMastered || {},
+            writingWeak: parsed.writingWeak || {},
+            dailyCount: parsed.dailyCount || {},
+            settings: Object.assign({}, def.settings, parsed.settings || {})
+          };
+        } catch {
+          return defaultState();
+        }
+      }
+
+      let state = loadState();
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch {
+          showToast('存储空间不足，建议导出 JSON 备份');
+        }
+      }
+
+      // Single reusable Audio instance for iOS Safari synchronous user-gesture playback
+      const sharedAudio = new Audio();
+      sharedAudio.preload = 'none';
+
+      function fallbackTTS(text) {
+        if (!('speechSynthesis' in window) || !text) return;
+        try {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = state.settings.accent === 'uk' ? 'en-GB' : 'en-US';
+          const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+          const pick = voices.find((v) => v.lang === u.lang) || voices.find((v) => v.lang && v.lang.startsWith('en'));
+          if (pick) u.voice = pick;
+          u.rate = 0.92;
+          window.speechSynthesis.speak(u);
+        } catch {}
+      }
+
+      function speakWord(text) {
+        if (!text) return;
+        const type = state.settings.accent === 'uk' ? 1 : 2;
+        const url = `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(text)}&type=${type}`;
+        sharedAudio.onerror = () => fallbackTTS(text);
+        sharedAudio.src = url;
+        try {
+          const p = sharedAudio.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => fallbackTTS(text));
+          }
+        } catch {
+          fallbackTTS(text);
+        }
+      }
+
+      function esc(str) {
+        return String(str ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+      }
+
+      function bumpDaily() {
+        const t = todayStr();
+        state.dailyCount[t] = (state.dailyCount[t] || 0) + 1;
+      }
+
+      // Theme & Accent
+      function applyTheme() {
+        const t = state.settings.theme;
+        if (t === 'auto') {
+          document.documentElement.removeAttribute('data-theme');
+          document.getElementById('themeBtn').textContent = '🌓';
+        } else if (t === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.getElementById('themeBtn').textContent = '🌙';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.getElementById('themeBtn').textContent = '☀️';
+        }
+        document.getElementById('accentBtn').textContent = state.settings.accent === 'uk' ? '🇬🇧 英音' : '🇺🇸 美音';
+      }
+
+      // Session Queues
+      let screenQueue = [];
+      let screenRequeued = new Set();
+      let screenRevealed = false;
+      let screenHistory = [];
+
+      let vocabQueue = [];
+      let vocabRequeued = new Set();
+      let vocabRevealed = false;
+
+      let writeQueue = [];
+      let writeIndex = 0;
+      let writeLocked = false;
+      let writeFeedback = null;
+
+      function rebuildScreenQueue() {
+        const d = state.settings.day;
+        const f = state.settings.filter;
+        const dayWords = WORDS.filter((w) => w.day === d);
+        let list = dayWords;
+        if (f === 'unscreened') {
+          list = dayWords.filter((w) => !state.known[w.id] && !state.unknown[w.id]);
+        } else if (f === 'listen') {
+          list = dayWords.filter((w) => w.isListenHigh && !state.known[w.id]);
+        }
+        screenQueue = list.map((w) => w.id);
+        screenRequeued = new Set();
+        screenRevealed = false;
+      }
+
+      function rebuildVocabQueue() {
+        const f = state.settings.vocabFilter;
+        const t = todayStr();
+        const entries = Object.entries(state.unknown)
+          .map(([id, info]) => ({ id: Number(id), info, wordObj: WORD_BY_ID.get(Number(id)) }))
+          .filter((x) => x.wordObj && (f === 'all' || x.info.addedAt === t));
+        entries.sort((a, b) => (b.info.wrongCount - a.info.wrongCount) || (b.wordObj.listenFreq - a.wordObj.listenFreq) || (a.id - b.id));
+        vocabQueue = entries.map((x) => x.id);
+        vocabRequeued = new Set();
+        vocabRevealed = false;
+      }
+
+      function rebuildWriteQueue() {
+        const cat = state.settings.writeCat;
+        let list = WRITING;
+        if (cat === 'weak') {
+          list = WRITING.filter((item) => (state.writingWeak[item.word] || 0) > 0);
+        } else if (cat !== 'all') {
+          list = WRITING.filter((item) => item.cat === cat);
+        }
+        // Unmastered first
+        const unmastered = list.filter((x) => !state.writingMastered[x.word]);
+        const mastered = list.filter((x) => state.writingMastered[x.word]);
+        writeQueue = unmastered.concat(mastered);
+        writeIndex = 0;
+        writeLocked = false;
+        writeFeedback = null;
+      }
+
+      function renderDayBar() {
+        const dayBar = document.getElementById('dayBar');
+        let html = '';
+        for (let d = 1; d <= 12; d++) {
+          const allD = WORDS.filter((w) => w.day === d);
+          const doneD = allD.filter((w) => state.known[w.id] || state.unknown[w.id]).length;
+          const isDone = allD.length > 0 && doneD === allD.length;
+          const cls = `day-pill${state.settings.day === d ? ' active' : ''}${isDone ? ' done' : ''}`;
+          html += `<button type="button" class="${cls}" data-day="${d}"><strong>D${d}</strong><span>${doneD}/${allD.length}</span></button>`;
+        }
+        dayBar.innerHTML = html;
+        const activeBtn = dayBar.querySelector('.day-pill.active');
+        if (activeBtn) {
+          activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+      }
+
+      function renderWordDetail(w) {
+        const synoHtml = w.syno && w.syno.length
+          ? `<div class="sub-block"><div class="sub-label">🔁 听力 / 阅读高频同义替换</div><div class="syno-list">${w.syno.map((s) => `<span class="syno-tag">${esc(s)}</span>`).join('')}</div></div>`
+          : '';
+        const phraseHtml = w.phrase && w.phrase.length
+          ? `<div class="sub-block"><div class="sub-label">📌 常用搭配</div>${w.phrase.map((p) => `<div class="phrase-item"><strong>${esc(p.en)}</strong> · ${esc(p.cn)}</div>`).join('')}</div>`
+          : '';
+        const exHtml = w.ex
+          ? `<div class="sub-block"><div class="sub-label">💬 真题语境例句</div><div>${esc(w.ex.en)}</div><div class="ex-cn">${esc(w.ex.cn)}</div></div>`
+          : '';
+        return `
+          <div class="reveal-box">
+            <div class="cn-meaning">${esc(w.cn)}</div>
+            ${synoHtml}
+            ${phraseHtml}
+            ${exHtml}
+          </div>
+        `;
+      }
+
+      function renderScreen() {
+        renderDayBar();
+        document.querySelectorAll('#screenFilters .chip').forEach((btn) => {
+          btn.classList.toggle('active', btn.dataset.filter === state.settings.filter);
+        });
+        document.getElementById('blindToggle').classList.toggle('toggle-on', state.settings.blind);
+        document.getElementById('autoPlayToggle').classList.toggle('active', state.settings.autoPlay);
+
+        const dayWords = WORDS.filter((w) => w.day === state.settings.day);
+        const screenedCount = dayWords.filter((w) => state.known[w.id] || state.unknown[w.id]).length;
+        const knownCount = dayWords.filter((w) => state.known[w.id]).length;
+        const pct = dayWords.length ? Math.round((screenedCount / dayWords.length) * 100) : 0;
+        document.getElementById('dayProgressFill').style.width = `${pct}%`;
+        document.getElementById('dayProgressText').textContent = `Day ${state.settings.day} 已筛 ${screenedCount}/${dayWords.length}（熟词 ${knownCount}）`;
+
+        const stage = document.getElementById('screenStage');
+        const infoEl = document.getElementById('screenQueueInfo');
+        document.getElementById('undoScreenBtn').disabled = screenHistory.length === 0;
+
+        if (!screenQueue.length) {
+          infoEl.textContent = '本组已清空';
+          stage.innerHTML = `
+            <div class="card empty-card">
+              <div class="empty-icon">🎉</div>
+              <p class="empty-title">Day ${state.settings.day} 当前筛选已刷完！</p>
+              <p class="empty-desc">可以去「🔥 生词本」消灭标橙词，或切到下一天。</p>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;justify-content:center;">
+                ${state.settings.day < 12 ? `<button type="button" class="big-btn btn-primary" style="min-height:44px;padding:0 18px;" id="nextDayBtn">进入 Day ${state.settings.day + 1} →</button>` : ''}
+                <button type="button" class="big-btn btn-ghost" style="min-height:44px;padding:0 18px;" id="resetDayFilterBtn">重刷本组全部词</button>
+              </div>
+            </div>
+          `;
+          const nd = document.getElementById('nextDayBtn');
+          if (nd) nd.onclick = () => { state.settings.day += 1; saveState(); rebuildScreenQueue(); renderScreen(); };
+          document.getElementById('resetDayFilterBtn').onclick = () => { state.settings.filter = 'all'; saveState(); rebuildScreenQueue(); renderScreen(); };
+          return;
+        }
+
+        const w = WORD_BY_ID.get(screenQueue[0]);
+        const isRequeue = screenRequeued.has(w.id);
+        const blindHidden = state.settings.blind && !screenRevealed;
+        const phone = state.settings.accent === 'uk' ? (w.uk || w.us) : (w.us || w.uk);
+        infoEl.textContent = `本组剩余 ${screenQueue.length} 词`;
+
+        stage.innerHTML = `
+          <div class="card word-card" id="screenCard" role="button" tabindex="0" aria-label="点击展开或收起释义">
+            <div class="card-top">
+              <div class="badges">
+                <span class="badge">真题 ${w.readFreq}次 · 听力 ${w.listenFreq}次</span>
+                ${w.isListenHigh ? '<span class="badge listen">🎧 听力高频</span>' : ''}
+                ${isRequeue ? '<span class="badge requeue">🔁 回炉再测</span>' : ''}
+              </div>
+              <button type="button" class="speak-btn" id="screenSpeakBtn">🔊 ${blindHidden ? '再听一遍' : '发音'}</button>
+            </div>
+
+            ${blindHidden ? `
+              <div class="blind-box">
+                <div class="blind-dots">● ● ● ● ●</div>
+                <div class="blind-tip">👂 盲听模式：先听发音回忆词形与词义<br>点击卡片核对拼写、音标和释义</div>
+              </div>
+            ` : `
+              <div class="word-hero">
+                <p class="word-text">${esc(w.word)}</p>
+                ${phone ? `<div class="phonetic">/${esc(phone)}/</div>` : ''}
+              </div>
+            `}
+
+            ${screenRevealed ? renderWordDetail(w) : `<div class="tap-hint">${blindHidden ? '👁 点击卡片揭晓单词与释义' : '👆 点击卡片查看释义、同义替换与例句'}</div>`}
+          </div>
+
+          <div class="action-bar" style="margin-top:12px;">
+            <button type="button" class="big-btn btn-warn" id="btnUnknown">🟠 不熟·收进生词本</button>
+            <button type="button" class="big-btn btn-ok" id="btnKnown">✅ 秒认·划掉</button>
+          </div>
+        `;
+
+        document.getElementById('screenSpeakBtn').onclick = (e) => {
+          e.stopPropagation();
+          speakWord(w.word);
+        };
+        document.getElementById('screenCard').onclick = () => {
+          screenRevealed = !screenRevealed;
+          renderScreen();
+        };
+        document.getElementById('btnUnknown').onclick = () => handleScreenChoice(w, false);
+        document.getElementById('btnKnown').onclick = () => handleScreenChoice(w, true);
+      }
+
+      function handleScreenChoice(w, isKnown) {
+        screenHistory.push({
+          id: w.id,
+          prevKnown: !!state.known[w.id],
+          prevUnknown: state.unknown[w.id] ? { ...state.unknown[w.id] } : null,
+          wasRequeued: screenRequeued.has(w.id)
+        });
+        if (screenHistory.length > 30) screenHistory.shift();
+
+        screenQueue.shift();
+        if (isKnown) {
+          state.known[w.id] = true;
+          delete state.unknown[w.id];
+        } else {
+          const prev = state.unknown[w.id];
+          state.unknown[w.id] = {
+            addedAt: prev ? prev.addedAt : todayStr(),
+            wrongCount: (prev ? prev.wrongCount : 0) + 1
+          };
+          delete state.known[w.id];
+          if (!screenRequeued.has(w.id)) {
+            screenRequeued.add(w.id);
+            screenQueue.push(w.id);
+          }
+        }
+        bumpDaily();
+        screenRevealed = false;
+        saveState();
+        updateVocabBadge();
+        renderScreen();
+        if (state.settings.autoPlay && screenQueue.length) {
+          const nextW = WORD_BY_ID.get(screenQueue[0]);
+          if (nextW) speakWord(nextW.word);
+        }
+      }
+
+      function undoScreen() {
+        const last = screenHistory.pop();
+        if (!last) return;
+        if (last.prevKnown) state.known[last.id] = true;
+        else delete state.known[last.id];
+        if (last.prevUnknown) state.unknown[last.id] = last.prevUnknown;
+        else delete state.unknown[last.id];
+        screenQueue = screenQueue.filter((id) => id !== last.id);
+        screenQueue.unshift(last.id);
+        if (!last.wasRequeued) screenRequeued.delete(last.id);
+        screenRevealed = false;
+        saveState();
+        updateVocabBadge();
+        renderScreen();
+        showToast('已撤回上一张');
+      }
+
+      function updateVocabBadge() {
+        const total = Object.keys(state.unknown).length;
+        const badge = document.getElementById('vocabBadge');
+        if (total > 0) {
+          badge.hidden = false;
+          badge.textContent = total > 99 ? '99+' : String(total);
+        } else {
+          badge.hidden = true;
+        }
+      }
+
+      function renderVocab() {
+        updateVocabBadge();
+        const t = todayStr();
+        const allCount = Object.keys(state.unknown).length;
+        const todayCount = Object.values(state.unknown).filter((v) => v.addedAt === t).length;
+
+        document.querySelectorAll('#vocabFilters .chip').forEach((btn) => {
+          const vf = btn.dataset.vfilter;
+          btn.classList.toggle('active', vf === state.settings.vocabFilter);
+          btn.textContent = vf === 'all' ? `全部待清零 (${allCount})` : `今日新增 (${todayCount})`;
+        });
+        document.getElementById('vocabBlindToggle').classList.toggle('toggle-on', state.settings.vocabBlind);
+
+        const stage = document.getElementById('vocabStage');
+        if (!vocabQueue.length) {
+          stage.innerHTML = `
+            <div class="card empty-card">
+              <div class="empty-icon">✨</div>
+              <p class="empty-title">${allCount === 0 ? '生词本已清零！' : '今日新增生词已消化完！'}</p>
+              <p class="empty-desc">去「🎧 速筛」继续过新词，或用「✍️ 写译拼写」巩固输出。</p>
+            </div>
+          `;
+        } else {
+          const w = WORD_BY_ID.get(vocabQueue[0]);
+          const uInfo = state.unknown[w.id] || { wrongCount: 1 };
+          const blindHidden = state.settings.vocabBlind && !vocabRevealed;
+          const phone = state.settings.accent === 'uk' ? (w.uk || w.us) : (w.us || w.uk);
+
+          stage.innerHTML = `
+            <div class="card word-card" id="vocabCard" role="button" tabindex="0">
+              <div class="card-top">
+                <div class="badges">
+                  <span class="badge">不熟 ${uInfo.wrongCount} 次 · 剩余 ${vocabQueue.length}</span>
+                  ${w.isListenHigh ? '<span class="badge listen">🎧 听力高频</span>' : ''}
+                </div>
+                <button type="button" class="speak-btn" id="vocabSpeakBtn">🔊 发音</button>
+              </div>
+              ${blindHidden ? `
+                <div class="blind-box">
+                  <div class="blind-dots">● ● ● ● ●</div>
+                  <div class="blind-tip">👂 盲听复刷：听音回忆拼写与词义，点击卡片揭晓</div>
+                </div>
+              ` : `
+                <div class="word-hero">
+                  <p class="word-text">${esc(w.word)}</p>
+                  ${phone ? `<div class="phonetic">/${esc(phone)}/</div>` : ''}
+                </div>
+              `}
+              ${vocabRevealed ? renderWordDetail(w) : '<div class="tap-hint">👆 点击卡片看释义与同义替换</div>'}
+            </div>
+            <div class="action-bar" style="margin-top:12px;">
+              <button type="button" class="big-btn btn-warn" id="vocabKeepBtn">🔁 还不太熟</button>
+              <button type="button" class="big-btn btn-ok" id="vocabClearBtn">✅ 已记住·移出</button>
+            </div>
+          `;
+
+          document.getElementById('vocabSpeakBtn').onclick = (e) => { e.stopPropagation(); speakWord(w.word); };
+          document.getElementById('vocabCard').onclick = () => { vocabRevealed = !vocabRevealed; renderVocab(); };
+          document.getElementById('vocabKeepBtn').onclick = () => handleVocabChoice(w, false);
+          document.getElementById('vocabClearBtn').onclick = () => handleVocabChoice(w, true);
+        }
+
+        // Mini list
+        const mini = document.getElementById('vocabMiniList');
+        const listItems = Object.entries(state.unknown)
+          .map(([id, info]) => ({ id: Number(id), info, w: WORD_BY_ID.get(Number(id)) }))
+          .filter((x) => x.w)
+          .sort((a, b) => b.info.wrongCount - a.info.wrongCount);
+        mini.innerHTML = listItems.length
+          ? listItems.map(({ w, info }) => `
+              <div class="mini-item">
+                <div><strong>${esc(w.word)}</strong> <span style="color:var(--muted);">(${info.wrongCount}次)</span><br><span style="color:var(--muted);">${esc(w.cn)}</span></div>
+                <button type="button" class="icon-btn mini-speak" data-word="${esc(w.word)}">🔊</button>
+              </div>
+            `).join('')
+          : '<div style="font-size:13px;color:var(--muted);padding:6px 0;">暂无待清零生词</div>';
+        mini.querySelectorAll('.mini-speak').forEach((b) => {
+          b.onclick = () => speakWord(b.dataset.word);
+        });
+      }
+
+      function handleVocabChoice(w, cleared) {
+        vocabQueue.shift();
+        if (cleared) {
+          delete state.unknown[w.id];
+          state.known[w.id] = true;
+        } else {
+          if (state.unknown[w.id]) state.unknown[w.id].wrongCount += 1;
+          if (!vocabRequeued.has(w.id)) {
+            vocabRequeued.add(w.id);
+            vocabQueue.push(w.id);
+          }
+        }
+        bumpDaily();
+        vocabRevealed = false;
+        saveState();
+        renderVocab();
+        if (state.settings.autoPlay && vocabQueue.length) {
+          const nextW = WORD_BY_ID.get(vocabQueue[0]);
+          if (nextW) speakWord(nextW.word);
+        }
+      }
+
+      // Writing Spelling Tab
+      function buildDiffHtml(typed, target) {
+        const a = typed.trim();
+        const b = target.trim();
+        // DP Levenshtein backtrace for character diff
+        const m = a.length, n = b.length;
+        const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+        for (let i = 0; i <= m; i++) dp[i][0] = i;
+        for (let j = 0; j <= n; j++) dp[0][j] = j;
+        for (let i = 1; i <= m; i++) {
+          for (let j = 1; j <= n; j++) {
+            const cost = a[i - 1].toLowerCase() === b[j - 1].toLowerCase() ? 0 : 1;
+            dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+          }
+        }
+        let i = m, j = n;
+        const expectedParts = [];
+        const typedParts = [];
+        while (i > 0 || j > 0) {
+          if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + (a[i - 1].toLowerCase() === b[j - 1].toLowerCase() ? 0 : 1)) {
+            const eq = a[i - 1].toLowerCase() === b[j - 1].toLowerCase();
+            typedParts.push(`<span class="${eq ? 'ch-ok' : 'ch-bad'}">${esc(a[i - 1])}</span>`);
+            expectedParts.push(`<span class="${eq ? 'ch-ok' : 'ch-miss'}">${esc(b[j - 1])}</span>`);
+            i--; j--;
+          } else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+            typedParts.push(`<span class="ch-bad">${esc(a[i - 1])}</span>`);
+            i--;
+          } else {
+            expectedParts.push(`<span class="ch-miss">${esc(b[j - 1])}</span>`);
+            j--;
+          }
+        }
+        return {
+          typedHtml: typedParts.reverse().join('') || '<span class="ch-bad">(空)</span>',
+          expectedHtml: expectedParts.reverse().join('')
+        };
+      }
+
+      function makeSkeleton(phrase) {
+        return phrase.split(' ').map((part) => {
+          if (part.length <= 1) return part;
+          return part[0] + ' ' + part.slice(1).split('').map((ch) => (ch === '-' ? '-' : '_')).join(' ');
+        }).join('   ');
+      }
+
+      function renderWrite() {
+        const cats = ['all', 'weak', ...Array.from(new Set(WRITING.map((x) => x.cat)))];
+        const weakCount = WRITING.filter((x) => (state.writingWeak[x.word] || 0) > 0).length;
+        const catsEl = document.getElementById('writeCats');
+        catsEl.innerHTML = cats.map((c) => {
+          const label = c === 'all' ? `全部 (${WRITING.length})` : (c === 'weak' ? `只练易错 (${weakCount})` : c);
+          const active = state.settings.writeCat === c ? ' active' : '';
+          return `<button type="button" class="chip${active}" data-cat="${esc(c)}">${esc(label)}</button>`;
+        }).join('');
+        catsEl.querySelectorAll('.chip').forEach((btn) => {
+          btn.onclick = () => {
+            state.settings.writeCat = btn.dataset.cat;
+            saveState();
+            rebuildWriteQueue();
+            renderWrite();
+          };
+        });
+
+        const masteredTotal = WRITING.filter((x) => state.writingMastered[x.word]).length;
+        document.getElementById('writeProgressText').textContent = `写译拼写已掌握 ${masteredTotal}/${WRITING.length}（易错 ${weakCount}）`;
+        document.getElementById('writeHintToggle').classList.toggle('active', state.settings.writeHint);
+
+        const stage = document.getElementById('writeStage');
+        if (!writeQueue.length) {
+          stage.innerHTML = `
+            <div class="card empty-card">
+              <div class="empty-icon">✍️</div>
+              <p class="empty-title">当前分类暂无拼写词条</p>
+              <p class="empty-desc">切换回「全部」开始写译拼写专练吧。</p>
+            </div>
+          `;
+          return;
+        }
+
+        if (writeIndex >= writeQueue.length) writeIndex = 0;
+        const item = writeQueue[writeIndex];
+        const isMastered = !!state.writingMastered[item.word];
+
+        stage.innerHTML = `
+          <div class="card">
+            <div class="card-top">
+              <div class="badges">
+                <span class="badge cat">${esc(item.cat)}</span>
+                <span class="badge">${writeIndex + 1} / ${writeQueue.length}</span>
+                ${isMastered ? '<span class="badge" style="color:var(--ok);">✅ 已掌握</span>' : ''}
+              </div>
+              <button type="button" class="speak-btn" id="writeSpeakBtn">🔊 听发音</button>
+            </div>
+
+            <div class="write-cn">${esc(item.cn)}</div>
+            <div class="write-hint">提示：${esc(item.hint)}</div>
+            ${state.settings.writeHint ? `<div class="skeleton-box">${esc(makeSkeleton(item.word))}</div>` : ''}
+
+            <form id="spellForm" style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+              <input
+                id="spellInput"
+                class="spell-input"
+                type="text"
+                placeholder="${writeLocked ? '请照着上方正确拼写重打一遍...' : '输入英文单词或词组...'}"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="off"
+                spellcheck="false"
+                enterkeyhint="done"
+              >
+              ${writeFeedback ? writeFeedback.html : ''}
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <button type="submit" class="big-btn btn-primary">${writeLocked ? '✅ 确认重打过关' : '检查拼写'}</button>
+                <button type="button" id="writeNextBtn" class="big-btn btn-ghost" ${writeLocked ? 'disabled' : ''}>下一词 →</button>
+              </div>
+            </form>
+          </div>
+        `;
+
+        const input = document.getElementById('spellInput');
+        document.getElementById('writeSpeakBtn').onclick = () => speakWord(item.word);
+        document.getElementById('writeNextBtn').onclick = () => {
+          if (writeLocked) return;
+          writeIndex = (writeIndex + 1) % writeQueue.length;
+          writeFeedback = null;
+          renderWrite();
+          if (state.settings.autoPlay) speakWord(writeQueue[writeIndex].word);
+        };
+
+        document.getElementById('spellForm').onsubmit = (e) => {
+          e.preventDefault();
+          const val = input.value.trim().replace(/\s+/g, ' ');
+          const target = item.word.trim();
+          const norm = (s) => s.toLowerCase().replace(/\s+/g, ' ');
+          speakWord(target);
+
+          if (norm(val) === norm(target)) {
+            if (writeLocked) {
+              writeLocked = false;
+              writeFeedback = {
+                ok: true,
+                html: `<div class="spell-feedback ok"><strong>✅ 重打过关！已记入「易错词」方便考前复测：${esc(target)}</strong></div>`
+              };
+              renderWrite();
+              return;
+            }
+            state.writingMastered[target] = true;
+            bumpDaily();
+            saveState();
+            writeFeedback = {
+              ok: true,
+              html: `<div class="spell-feedback ok"><strong>✅ 拼写完全正确！${esc(target)}</strong></div>`
+            };
+            renderWrite();
+          } else {
+            if (!writeLocked) {
+              state.writingWeak[target] = (state.writingWeak[target] || 0) + 1;
+              delete state.writingMastered[target];
+              saveState();
+            }
+            writeLocked = true;
+            const diff = buildDiffHtml(val, target);
+            writeFeedback = {
+              ok: false,
+              html: `
+                <div class="spell-feedback err">
+                  <div><strong>❌ 有拼写误差，必须亲自重打一遍正确拼写才可切换：</strong></div>
+                  <div class="diff-line">你的：${diff.typedHtml}</div>
+                  <div class="diff-line">正确：${diff.expectedHtml}</div>
+                  <div style="font-size:12.5px;color:var(--muted);">💡 ${esc(item.hint)}</div>
+                </div>
+              `
+            };
+            renderWrite();
+            const inp2 = document.getElementById('spellInput');
+            if (inp2) { inp2.focus(); }
+          }
+        };
+      }
+
+      // Tabs
+      function switchTab(tab) {
+        state.settings.tab = tab;
+        saveState();
+        document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+        document.getElementById(`panel-${tab}`).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
+        if (tab === 'screen') renderScreen();
+        else if (tab === 'vocab') { rebuildVocabQueue(); renderVocab(); }
+        else if (tab === 'write') { rebuildWriteQueue(); renderWrite(); }
+      }
+
+      // Stats Dialog
+      function openStats() {
+        const knownTotal = WORDS.filter((w) => state.known[w.id]).length;
+        const unknownTotal = Object.keys(state.unknown).length;
+        const screenedTotal = WORDS.filter((w) => state.known[w.id] || state.unknown[w.id]).length;
+        const writeMasteredTotal = WRITING.filter((w) => state.writingMastered[w.word]).length;
+        const todayDone = state.dailyCount[todayStr()] || 0;
+
+        document.getElementById('statGrid').innerHTML = `
+          <div class="stat-box"><div class="stat-val">${screenedTotal} / ${WORDS.length}</div><div class="stat-lbl">已筛选高频词</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--ok);">${knownTotal}</div><div class="stat-lbl">已划掉熟词</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--warn);">${unknownTotal}</div><div class="stat-lbl">待清零生词本</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--primary);">${writeMasteredTotal} / ${WRITING.length}</div><div class="stat-lbl">写译拼写掌握</div></div>
+          <div class="stat-box" style="grid-column:1 / -1;"><div class="stat-val">${todayDone} 词次</div><div class="stat-lbl">今日累计刷词操作（${todayStr()}）</div></div>
+        `;
+        const m = DATA.meta || {};
+        document.getElementById('metaInfo').textContent =
+          `词库口径：${m.sourcePeriod || 'CET-6'}（扫描 ${m.examPapersScanned || 0} 份真题 + ${m.listeningScriptsScanned || 0} 份听力原文，含 ${m.listenHighCount || 0} 个听力高频词）`;
+        document.getElementById('statsDialog').showModal();
+      }
+
+      // Bindings
+      document.getElementById('dayBar').onclick = (e) => {
+        const btn = e.target.closest('.day-pill');
+        if (!btn) return;
+        state.settings.day = Number(btn.dataset.day);
+        saveState();
+        rebuildScreenQueue();
+        renderScreen();
+      };
+
+      document.getElementById('screenFilters').onclick = (e) => {
+        const btn = e.target.closest('.chip');
+        if (!btn) return;
+        state.settings.filter = btn.dataset.filter;
+        saveState();
+        rebuildScreenQueue();
+        renderScreen();
+      };
+
+      document.getElementById('blindToggle').onclick = () => {
+        state.settings.blind = !state.settings.blind;
+        screenRevealed = false;
+        saveState();
+        renderScreen();
+        if (state.settings.blind && screenQueue.length) {
+          const w = WORD_BY_ID.get(screenQueue[0]);
+          if (w) speakWord(w.word);
+        }
+      };
+
+      document.getElementById('autoPlayToggle').onclick = () => {
+        state.settings.autoPlay = !state.settings.autoPlay;
+        saveState();
+        renderScreen();
+        showToast(state.settings.autoPlay ? '已开启切词自动播音' : '已关闭自动播音');
+      };
+
+      document.getElementById('undoScreenBtn').onclick = undoScreen;
+
+      document.getElementById('vocabFilters').onclick = (e) => {
+        const btn = e.target.closest('.chip');
+        if (!btn) return;
+        state.settings.vocabFilter = btn.dataset.vfilter;
+        saveState();
+        rebuildVocabQueue();
+        renderVocab();
+      };
+
+      document.getElementById('vocabBlindToggle').onclick = () => {
+        state.settings.vocabBlind = !state.settings.vocabBlind;
+        vocabRevealed = false;
+        saveState();
+        renderVocab();
+      };
+
+      document.getElementById('writeHintToggle').onclick = () => {
+        state.settings.writeHint = !state.settings.writeHint;
+        saveState();
+        renderWrite();
+      };
+
+      document.querySelectorAll('.nav-btn').forEach((btn) => {
+        btn.onclick = () => switchTab(btn.dataset.tab);
+      });
+
+      document.getElementById('accentBtn').onclick = () => {
+        state.settings.accent = state.settings.accent === 'us' ? 'uk' : 'us';
+        saveState();
+        applyTheme();
+        if (state.settings.tab === 'screen') renderScreen();
+        else if (state.settings.tab === 'vocab') renderVocab();
+      };
+
+      document.getElementById('themeBtn').onclick = () => {
+        const order = ['auto', 'light', 'dark'];
+        const next = order[(order.indexOf(state.settings.theme) + 1) % order.length];
+        state.settings.theme = next;
+        saveState();
+        applyTheme();
+      };
+
+      document.getElementById('statsBtn').onclick = openStats;
+      document.getElementById('closeStatsBtn').onclick = () => document.getElementById('statsDialog').close();
+      document.getElementById('statsDialog').onclick = (e) => {
+        if (e.target === e.currentTarget) e.currentTarget.close();
+      };
+
+      document.getElementById('exportBtn').onclick = async () => {
+        const json = JSON.stringify(state);
+        const ta = document.getElementById('backupJson');
+        ta.value = json;
+        try {
+          await navigator.clipboard.writeText(json);
+          showToast('进度 JSON 已复制到剪贴板');
+        } catch {
+          ta.select();
+          showToast('已填入下方输入框，请手动全选复制');
+        }
+      };
+
+      document.getElementById('importBtn').onclick = () => {
+        const raw = document.getElementById('backupJson').value.trim();
+        if (!raw) { showToast('请先粘贴进度 JSON'); return; }
+        try {
+          const parsed = JSON.parse(raw);
+          const def = defaultState();
+          state = {
+            known: parsed.known || {},
+            unknown: parsed.unknown || {},
+            writingMastered: parsed.writingMastered || {},
+            writingWeak: parsed.writingWeak || {},
+            dailyCount: parsed.dailyCount || {},
+            settings: Object.assign({}, def.settings, parsed.settings || {})
+          };
+          saveState();
+          applyTheme();
+          rebuildScreenQueue();
+          rebuildVocabQueue();
+          rebuildWriteQueue();
+          switchTab(state.settings.tab);
+          openStats();
+          showToast('进度导入成功');
+        } catch {
+          showToast('JSON 格式有误，未覆盖');
+        }
+      };
+
+      let resetArmed = false;
+      let resetTimer = null;
+      document.getElementById('resetBtn').onclick = () => {
+        const btn = document.getElementById('resetBtn');
+        if (!resetArmed) {
+          resetArmed = true;
+          btn.textContent = '⚠️ 再点一次确认清空';
+          clearTimeout(resetTimer);
+          resetTimer = setTimeout(() => {
+            resetArmed = false;
+            btn.textContent = '🗑 清空进度';
+          }, 3500);
+          return;
+        }
+        resetArmed = false;
+        btn.textContent = '🗑 清空进度';
+        state = defaultState();
+        saveState();
+        applyTheme();
+        rebuildScreenQueue();
+        rebuildVocabQueue();
+        rebuildWriteQueue();
+        switchTab('screen');
+        openStats();
+        showToast('已重置全部学习进度');
+      };
+
+      // Keyboard shortcuts on desktop
+      document.addEventListener('keydown', (e) => {
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (state.settings.tab === 'screen' && screenQueue.length) {
+          const w = WORD_BY_ID.get(screenQueue[0]);
+          if (e.code === 'Space') { e.preventDefault(); screenRevealed = !screenRevealed; renderScreen(); }
+          else if (e.key === '1' || e.key === 'ArrowLeft') { e.preventDefault(); handleScreenChoice(w, false); }
+          else if (e.key === '2' || e.key === 'ArrowRight') { e.preventDefault(); handleScreenChoice(w, true); }
+          else if (e.key.toLowerCase() === 'r') { speakWord(w.word); }
+        } else if (state.settings.tab === 'vocab' && vocabQueue.length) {
+          const w = WORD_BY_ID.get(vocabQueue[0]);
+          if (e.code === 'Space') { e.preventDefault(); vocabRevealed = !vocabRevealed; renderVocab(); }
+          else if (e.key === '1' || e.key === 'ArrowLeft') { e.preventDefault(); handleVocabChoice(w, false); }
+          else if (e.key === '2' || e.key === 'ArrowRight') { e.preventDefault(); handleVocabChoice(w, true); }
+          else if (e.key.toLowerCase() === 'r') { speakWord(w.word); }
+        }
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+
+      // Init
+      applyTheme();
+      rebuildScreenQueue();
+      updateVocabBadge();
+      switchTab(state.settings.tab || 'screen');
+    })();
+  </script>
+</body>
+</html>

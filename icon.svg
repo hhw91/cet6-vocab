@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <rect x="44" y="44" width="424" height="424" rx="84" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="6"/>
+  <text x="256" y="232" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif" font-size="112" font-weight="800" fill="#ffffff" letter-spacing="2">CET6</text>
+  <text x="256" y="346" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="74" font-weight="700" fill="#dbeafe">高频速刷</text>
+</svg>
